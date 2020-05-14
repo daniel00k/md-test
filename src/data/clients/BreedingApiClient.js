@@ -5,10 +5,15 @@ class BreedingApiClient {
         return data;
     }
 
-    async findByBreed(breedName) {
+    async findImageByBreed(breedName) {
         const response = await fetch(`https://dog.ceo/api/breed/${breedName}/images/random`);//https://dog.ceo/api/breed/australian/shepherd/images/random
         const data = await response.json();
         return data;
+    }
+
+    async getImagesForBreeds(breedList) {
+        const response = await Promise.all(breedList.map(this.findImageByBreed));
+        return response;
     }
 }
 export default BreedingApiClient;

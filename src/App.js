@@ -4,7 +4,7 @@ import BreedingGalleryComponent from './components/BreedingGalleryComponent';
 
 function App() {
   return (
-    <div className="App">
+    <div className="container">
       <BreedingGalleryComponent />
     </div>
   );

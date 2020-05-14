@@ -21,16 +21,11 @@ class BreedingListComponent extends React.Component {
             <Select
                 closeMenuOnSelect={false}
                 components={animatedComponents}
-                
+                value={this.props.selectedValues}
                 isMulti
                 onChange={this.handleChange}
                 options={this.props.breedingListOptions}
             />
-            // <Select onChange={this.handleChange}>
-            //     {
-            //         this.props.breedingListOptions.map(option => <option key={option.value} value={option.value}>{option.label}</option>)
-            //     }
-            // </select>
         )
     }
 }

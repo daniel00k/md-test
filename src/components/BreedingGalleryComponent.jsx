@@ -9,7 +9,7 @@ class BreedingGalleryComponent extends React.Component {
         originalList: [],
         breedingList: [],
         subBreedingList: [],
-        queryNamesList: []
+        imageUrls: []
     }
 
     constructor(props) {
@@ -72,20 +72,43 @@ class BreedingGalleryComponent extends React.Component {
             accum.push({ label: breeding.label, options: updatedOptions })
             return accum;
         }, []);
+
         this.setState({
             subBreedingList: newSubBreedingList
         })
     }
 
+    getImages = () => {
+        this.presenter
+            .getImagesForBreeding(this.state.breedingList, this.state.subBreedingList)
+            .then(data => this.setState({ imageUrls: data }))
+    }
+
     render() {
+        const selectedBreedingList = this.presenter.getSelectedBreedingList(this.state.breedingList);
+        const selectedSubBreedingList = this.presenter.getSelectedSubBreedingList(this.state.subBreedingList);
         return (
-            <header className="App-header">
-                Seleccione Raza:
-            <BreedingListComponent onMultiselectChange={this.updateSelectedBreedingQueryList} breedingListOptions={this.state.breedingList} />
-                Seleccione SubRaza:
-            <BreedingListComponent onMultiselectChange={this.updateSelectedSubBreedingQueryList} breedingListOptions={this.state.subBreedingList} />
+            <div className="row">
+                {/* Esto podria ir en su propio componente usando una prop para el label */}
+                <div className="col-lg-6">
+                    <div className="form-group">
+                        <label htmlFor="">Seleccione Raza:</label>
+                        <BreedingListComponent selectedValues={selectedBreedingList} onMultiselectChange={this.updateSelectedBreedingQueryList} breedingListOptions={this.state.breedingList} />
+                    </div>
+                </div>
+                <div className="col-lg-6">
+                    <div className="form-group">
+                        <label htmlFor="">Seleccione SubRaza:</label>
+                        <BreedingListComponent selectedValues={selectedSubBreedingList} onMultiselectChange={this.updateSelectedSubBreedingQueryList} breedingListOptions={this.state.subBreedingList} />
+                    </div>
+                    {/* Esto podria ir en su propio componente */}
+                    <button type="submit" onClick={this.getImages} className="btn btn-primary">Submit</button>
+                </div>
                 Galería:
-        </header>
+                <div className="card-columns">
+                    {this.state.imageUrls.map((url, index) => <div key={index}className="card"><img className="card-img" src={url} /></div>)}
+                </div>
+            </div>
         )
     }
 }
