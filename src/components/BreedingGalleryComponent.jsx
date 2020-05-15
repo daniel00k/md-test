@@ -29,30 +29,9 @@ class BreedingGalleryComponent extends React.Component {
     }
 
     updateSelectedBreedingQueryList = (breedingListName) => {
-        const newBreedingList = this.state.breedingList.map(breeding => {
-            if (breedingListName.includes(breeding.value)) {
-                breeding.selected = true;
-            } else {
-                breeding.selected = false;
-            }
-            return breeding;
-        });
-        const subList = this.presenter.getUpdatedSubBreedingList(this.state.originalList, breedingListName)
-            .map(m => {
-                const elementFromCurrentState = this.state.subBreedingList.filter(element => element.label === m.name)[0];
-                if (elementFromCurrentState !== undefined) {
-                    return elementFromCurrentState;
-                }
-                return {
-                    label: m.name,
-                    options: m.subBreedings.map(sb => {
-                        return {
-                            value: sb.queryName, label: sb.name, selected: false
-                        }
-                    }
-                    )
-                }
-            });
+        const newBreedingList = this.presenter.getBreedingListWithUpdatedSelectedValue(this.state.breedingList, breedingListName); 
+        const breedingsWithSubBreedings = this.presenter.filterBreedingsWithoutSubBreedings(this.state.originalList, breedingListName)
+        const subList = this.presenter.getUpdatedSubBreedingList(this.state.subBreedingList, breedingsWithSubBreedings);
         this.setState({
             breedingList: newBreedingList,
             subBreedingList: subList
@@ -60,22 +39,10 @@ class BreedingGalleryComponent extends React.Component {
     }
 
     updateSelectedSubBreedingQueryList = (breedingListName) => {
-        const newSubBreedingList = this.state.subBreedingList.reduce((accum, breeding) => {
-            const updatedOptions = breeding.options.map(option => {
-                if (breedingListName.includes(option.value)) {
-                    option.selected = true;
-                } else {
-                    option.selected = false;
-                }
-                return option;
-            });
-            accum.push({ label: breeding.label, options: updatedOptions })
-            return accum;
-        }, []);
-
+        const newSubBreedingList = this.presenter.getSubBreedingListWithUpdatedSelectedValue(this.state.subBreedingList, breedingListName);
         this.setState({
             subBreedingList: newSubBreedingList
-        })
+        });
     }
 
     getImages = () => {

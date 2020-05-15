@@ -14,7 +14,7 @@ class BreedingGalleryPresenter {
 
     async getImagesForBreeding(breedingList, subBreedingList) {
         const rawResponse = await this.breedingRepository.getImagesForBreedList(this.getFilteredListToRequest(breedingList, subBreedingList))
-        return rawResponse.map(r=>r.message);
+        return rawResponse.map(r => r.message);
     }
 
     getSelectedBreedingList(breedingList) {
@@ -44,7 +44,36 @@ class BreedingGalleryPresenter {
         return breedingListName.concat(subBreedingListName).filter(name => !itemsToRemove.includes(name))
     }
 
-    getUpdatedSubBreedingList(breedingList, breedingListName) {
+    getBreedingListWithUpdatedSelectedValue(breedingList, breedingListName) {
+        return breedingList.map(breeding => {
+            if (breedingListName.includes(breeding.value)) {
+                breeding.selected = true;
+            } else {
+                breeding.selected = false;
+            }
+            return breeding;
+        });
+    }
+
+    getSubBreedingListWithUpdatedSelectedValue(subBreedingList, breedingListName) {
+        return subBreedingList.reduce((accum, breeding) => {
+            const updatedOptions = breeding.options.map(option => {
+                if (breedingListName.includes(option.value)) {
+                    option.selected = true;
+                } else {
+                    option.selected = false;
+                }
+                return option;
+            });
+            accum.push({
+                label: breeding.label,
+                options: updatedOptions
+            })
+            return accum;
+        }, []);
+    }
+
+    filterBreedingsWithoutSubBreedings(breedingList, breedingListName) {
         return breedingListName.reduce((accum, name) => {
             const breeding = breedingList.filter(b => b.name === name)[0]
             let subBreedings = breeding.subBreeding;
@@ -56,6 +85,25 @@ class BreedingGalleryPresenter {
             }
             return accum;
         }, [])
+    }
+
+    getUpdatedSubBreedingList(subBreedingList, breedingsWithSubBreedings) {
+        return breedingsWithSubBreedings.map(m => {
+            const elementFromCurrentState = subBreedingList.filter(element => element.label === m.name)[0];
+            if (elementFromCurrentState !== undefined) {
+                return elementFromCurrentState;
+            }
+            return {
+                label: m.name,
+                options: m.subBreedings.map(sb => {
+                    return {
+                        value: sb.queryName,
+                        label: sb.name,
+                        selected: false
+                    }
+                })
+            }
+        });
     }
 }
 export default BreedingGalleryPresenter;
