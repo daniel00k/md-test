@@ -37,11 +37,6 @@ class BreedingGalleryPresenter {
         }, []);
     }
 
-    // breedingList =[{ value: "african", label: "african", selected: true },
-    // { value: "akita", label: "akita", selected: true },
-    // ​{ value: "spaniel", label: "spaniel", selected: true }]    
-    // subBreedingList =[{ value: "spaniel/cocker", label: "cocker", selected: true }]
-
     getFilteredListToRequest(breedingList, subBreedingList) {
         const breedingListName = this.getSelectedBreedingList(breedingList).map(b => b.value);
         const subBreedingListName = this.getSelectedSubBreedingList(subBreedingList).map(sb => sb.value);
