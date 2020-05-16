@@ -16,16 +16,10 @@ test('Shows gallery after images are loaded', async () => {
     const elem = await waitForElement(() => getByTestId('dataloaded'));
     await selectEvent.select(getByLabelText('Seleccione una raza'), ['akita', 'australian']);
     await selectEvent.select(getByLabelText('Seleccione una sub raza'), ['shepherd']);
-    fireEvent.click(getByText('Filtrar'));
-    const gallery = await waitForElement(() => getByTestId('imagesloaded'), {timeout: 10000});
+    fireEvent.click(getByText('Buscar'));
+    const gallery = await waitForElement(() => getByTestId('imagesloaded'), { timeout: 10000 });
     const images = getAllByRole("img");
-    const expectedNumberOfImages = 2;
+    const expectedNumberOfImages = 3;
     expect(images.length).toEqual(expectedNumberOfImages);
     cleanup();
 })
-
-// test("Shows 'Filtrar' button after data is loaded", async () => {
-//     const elem = await waitForElement(() => getByTestId('dataloaded'))
-//     expect(elem).toHaveTextContent('Filtrar');
-//     cleanup();
-// })
