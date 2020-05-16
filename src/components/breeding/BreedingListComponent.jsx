@@ -18,23 +18,29 @@ class BreedingListComponent extends React.Component {
 
     render() {
         return (
-            <Select
-                closeMenuOnSelect={false}
-                components={animatedComponents}
-                value={this.props.selectedValues}
-                placeholder={this.props.selectMessage}
-                noOptionsMessage={() => { return "No hay opciones" }}
-                isMulti
-                onChange={this.handleChange}
-                options={this.props.breedingListOptions}
-            />
+            <div>
+                <label className="d-none" htmlFor={this.props.inputId}>{this.props.selectMessage}</label>
+                <Select
+                    closeMenuOnSelect={false}
+                    components={animatedComponents}
+                    value={this.props.selectedValues}
+                    placeholder={this.props.selectMessage}
+                    name={this.props.inputId}
+                    inputId={this.props.inputId}
+                    noOptionsMessage={() => { return "No hay opciones" }}
+                    isMulti
+                    onChange={this.handleChange}
+                    options={this.props.breedingListOptions}
+                />
+            </div>
         )
     }
 }
 
 BreedingListComponent.defaultProps = {
     breedingListOptions: [],
-    selectMessage: "Seleccione una opción"
+    selectMessage: "Seleccione una opción",
+    inputId: "breedingListSelect"
 };
 
 BreedingListComponent.propTypes = {

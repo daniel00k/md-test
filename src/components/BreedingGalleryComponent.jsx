@@ -11,7 +11,7 @@ class BreedingGalleryComponent extends React.Component {
         subBreedingList: [],
         imageUrls: [],
         isLoadingData: true,
-        isLoadingImages: true
+        showGallery: false
     }
 
     constructor(props) {
@@ -51,14 +51,13 @@ class BreedingGalleryComponent extends React.Component {
     getImages = () => {
         this.presenter
             .getImagesForBreeding(this.state.breedingList, this.state.subBreedingList)
-            .then(data => this.setState({ imageUrls: data, isLoadingImages: false }))
+            .then(data => this.setState({ imageUrls: data, showGallery: true }))
     }
 
     getFilterButton() {
         if (this.state.isLoadingData) {
             return (
                 <div className="col-lg-2">
-                    Cargando
                 </div>
             )
         } else {
@@ -71,16 +70,16 @@ class BreedingGalleryComponent extends React.Component {
     }
 
     getGallery() {
-        if (this.state.isLoadingImages) {
+        if (this.state.showGallery) {
             return (
-                <div className="card-columns">
-                    Cargando
+                <div className="card-columns" data-testid="imagesloaded">
+                    {this.state.imageUrls.map((url, index) => <div key={index} className="card"><img className="card-img" src={url} /></div>)}
                 </div>
             )
         } else {
             return (
-                <div className="card-columns" data-testid="imagesloaded">
-                    {this.state.imageUrls.map((url, index) => <div key={index} className="card"><img className="card-img" src={url} /></div>)}
+                <div className="card-columns">
+                    Aun no hay imagenes para mostrar
                 </div>
             )
         }
@@ -93,12 +92,12 @@ class BreedingGalleryComponent extends React.Component {
             <div className="row">
                 <div className="col-lg-5">
                     <div className="form-group" >
-                        <BreedingListComponent selectMessage={"Seleccione una raza"} selectedValues={selectedBreedingList} onMultiselectChange={this.updateSelectedBreedingQueryList} breedingListOptions={this.state.breedingList} />
+                        <BreedingListComponent inputId={"breedingSelect"} selectMessage={"Seleccione una raza"} selectedValues={selectedBreedingList} onMultiselectChange={this.updateSelectedBreedingQueryList} breedingListOptions={this.state.breedingList} />
                     </div>
                 </div>
                 <div className="col-lg-5">
                     <div className="form-group">
-                        <BreedingListComponent selectMessage={"Seleccione una sub raza"} selectedValues={selectedSubBreedingList} onMultiselectChange={this.updateSelectedSubBreedingQueryList} breedingListOptions={this.state.subBreedingList} />
+                        <BreedingListComponent inputId={"subBreedingSelect"} selectMessage={"Seleccione una sub raza"} selectedValues={selectedSubBreedingList} onMultiselectChange={this.updateSelectedSubBreedingQueryList} breedingListOptions={this.state.subBreedingList} />
                     </div>
                 </div>
                 {this.getFilterButton()}
